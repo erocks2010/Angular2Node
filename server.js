@@ -3,6 +3,7 @@ var path = require('path');
 var bodyParser = require('body-parser');
 var index = require('./routes/index');
 var tasks = require('./routes/tasks');
+var cors=require('cors');
 var port = 3000;
 
 var app = new express();
@@ -17,6 +18,8 @@ app.use(express.static(path.join(__dirname, 'client')));
 //Body Parser Middle-Ware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use(cors({origin:true,credentials: true}));
 
 app.use('/', index);
 app.use('/api', tasks);

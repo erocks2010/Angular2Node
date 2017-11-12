@@ -1,16 +1,17 @@
 var express = require('express');
 var router = express.Router();
 var mongojs = require('mongojs');
-var db = mongojs('mongodb://tarun:tarun@ds249545.mlab.com:49545/angular2node', ['tasks']);
+var cors = require('cors');
+var db = mongojs('mongodb://tarun:tarun@ds249545.mlab.com:49545/angular2node', ['tasks', 'navBarMain']);
 
 //Get all tasks
-router.get('/tasks', function (req, res, next) {
-    db.tasks.find(function (err, tasks) {
+router.get('/navBarMenuItems', function (req, res, next) {
+    db.navBarMain.find(function (err, navBarMenuItems) {
         if (err) {
             res.send(err);
         }
         else {
-            res.json(tasks);
+            res.json(navBarMenuItems);
         }
     });
 });
@@ -77,7 +78,7 @@ router.put('/task/:id', function (req, res, next) {
         });
     }
     else {
-        db.tasks.update({ _id: mongojs.ObjectId(req.params.id) }, updTask,{},function (err, task) {
+        db.tasks.update({ _id: mongojs.ObjectId(req.params.id) }, updTask, {}, function (err, task) {
             if (err) {
                 res.send(err);
             }
