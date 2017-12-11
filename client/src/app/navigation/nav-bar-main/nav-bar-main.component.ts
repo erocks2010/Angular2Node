@@ -3,35 +3,32 @@ import { FetchMongodbDataService } from '../../services/fetch-mongodb-data.servi
 import { NavBarMenuItem } from '../../custom-types/nav-bar-menu-item';
 import { Observable } from 'rxjs/observable';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Subject } from 'rxjs/subject';
 
 @Component({
   selector: 'nav-bar-main',
   templateUrl: './nav-bar-main.component.html',
-  styleUrls: ['./nav-bar-main.component.css'],
+  styleUrls: ['./nav-bar-main.component.scss'],
   encapsulation: ViewEncapsulation.None,
   providers: [FetchMongodbDataService]
 })
+
 export class NavBarMainComponent implements OnInit {
   navBarItems: Array<NavBarMenuItem>;
-  notification$: Observable<Array<NavBarMenuItem>>;
-  constructor(private mongoDb: FetchMongodbDataService) { }
+  subjectNavBarMenuItems$: Subject<Array<NavBarMenuItem>>;
 
-  ngOnInit() {
-    // this.notification$ = this.mongoDb.notification$;
-    // this.notification$
-    //   .subscribe((data) => {
-    //     this.navBarItems = data;
-    //   })
-    this.mongoDb.getNavBarAll()
-      .subscribe((data) => {
-        this.navBarItems = data;
-      },
-      (err: HttpErrorResponse) => {
-        if (err.error instanceof Error) console.log('Unhandled Error ', err.error.message);
-        else console.log('Node Server returned status code ', err.status, err.error);
-      });;
+  constructor(private mongoDb: FetchMongodbDataService) {
+    this.subjectNavBarMenuItems$ = mongoDb.subject;
   }
 
+  ngOnInit() {
+    this.subjectNavBarMenuItems$
+      .subscribe({
+        next: (data) => {
+          this.navBarItems = data;
+        }
+      });
 
-
+    this.mongoDb.getNavBarAll();
+  }
 }

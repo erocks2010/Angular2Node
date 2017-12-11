@@ -1,0 +1,19 @@
+#navBarMain{
+    position:fixed;
+    float:left;
+    list-style-type: none;
+    background-color:lightseagreen;
+
+    .navBarMenuItem{
+        display:inline;
+        color:darkred;
+        border:solid 1px black;
+        width:100px;
+        height: 100px;
+        font:{
+            family:serif;
+            size:20px;
+            weight:bold;
+        }
+    }
+}
