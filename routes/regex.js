@@ -33,19 +33,19 @@ var cal7 = function (req, res, next) {
     console.log('callback 7');
     res.send('All callbacks executed');
 }
-router.get('/miltipleCallback', function (req, res, next) {
-    console.log('callback 1');
-    next();
-}, function (req, res, next) {
-    console.log('callback 2');
-    next();
-}, function (req, res, next) {
-    console.log('callback 3');
-    next();
-}, function (req, res, next) {
-    console.log('callback 4');
-    next();
-},
+router.get('/multipleCallback', function (req, res, next) {
+        console.log('callback 1');
+        next();
+    }, function (req, res, next) {
+        console.log('callback 2');
+        next();
+    }, function (req, res, next) {
+        console.log('callback 3');
+        next();
+    }, function (req, res, next) {
+        console.log('callback 4');
+        next();
+    },
     [cal5, cal6, cal7]);
 
 /*
@@ -82,7 +82,7 @@ router.get('/json', function (req, res) {
     res.links({
         tarun: 'www.google.com'
     }); // Add response header 'links'
-    res.json({ user: 'TarunMathur' });
+    res.json({user: 'TarunMathur'});
 })
 
 /*Express let you redirect to some other URL
@@ -96,18 +96,50 @@ Express middleware functions can pass on the control to the next identical route
  */
 
 router.get('/identical/:id', function (req, res, next) {
-    console.log('First Middleware function');
-    if (req.params.id == 1) next();
-    else next('route');
-},
+        console.log('First Middleware function');
+        if (req.params.id == 1) next();
+        else next('route');
+    },
     function (req, res, next) {
         console.log('Finally sending the reponse after the middleware function has executed');
         res.status(200).send('Executed First Middleware function and then sent the response');
     })
 
-router.get('/identical/:id',function(req,res){
+router.get('/identical/:id', function (req, res) {
     console.log('The second identical route');
     res.status(200).send('Executed the second idential route');
+});
+
+/*
+Express multiple middleware at Router level
+*/
+
+router.use(function (req, res, next) {
+    console.log('This is the Router level general middleware');
+    next();
+});
+
+router.use('/multiplemiddleware/:id', function (req, res, next) {
+    console.log('First Router Middleware function');
+    next();
+}, function (req, res, next) {
+    console.log('Second Router Middleware function');
+    next();
 })
+
+router.get('/multiplemiddleware/:id', function (req, res, next) {
+    console.log('First Router Route method');
+    if (req.params.id == 1) {
+        next();
+    }
+    else next('route');
+}, function (req, res, next) {
+    console.log('First Router Route Second Middleware');
+    res.send('Success from Router route1 second middleware');
+});
+router.get('/multiplemiddleware/:id', function (req, res, next) {
+    console.log('Second Router Route Method');
+    res.send('Success from Router route 2');
+});
 
 module.exports = router;
