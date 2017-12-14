@@ -3,7 +3,7 @@ var cookieParser = require('cookie-parser');
 var router = express.Router();
 
 router.get('/',cookieParser(), function (req, res, next) {
-    res.send(req.cookies);
+    res.send(req.session.id);
 });
 
 module.exports=router;

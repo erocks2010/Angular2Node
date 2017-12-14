@@ -2,12 +2,13 @@ var express = require('express');
 var path = require('path');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
+var session = require('express-session');
 //region requiring routes
 var index = require('./routes/index');
 var tasks = require('./routes/tasks');
 var routeMiddleware = require('./routes/routeMiddleware');
 var regexRoute = require('./routes/regex');
-var cookieManager=require('./routes/cookieManager');
+var cookieManager = require('./routes/cookieManager');
 //endregion
 
 var appConfig = require('./configs/appConfig');
@@ -19,7 +20,10 @@ var app = new express();
 app.use(bodyParser.json());// All request will be passed through this middleware and if it has any json , that will be added to body:{} onbect in req
 app.use(bodyParser.text());// All request will be passed through this middleware and if it has any text , that will be added to body:{} object in req
 app.use(bodyParser.raw());
-app.use(bodyParser.urlencoded({extended:false}));
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(session({
+    secret: 'heisenberg', saveUninitialized: false, resave: false, cookie: {maxAge: 100, httpOnly: true}
+}));
 /* All request will be passed through this middleware and if it has any form data(application/x-www-urlencoded Content-Type) ,
  that will be added to body:{} object in req
 */
@@ -72,7 +76,7 @@ app.use('/', routeMiddleware);
 app.use('/', index);
 app.use('/api', tasks);
 app.use('/regex', regexRoute);
-app.use('/getCookie',cookieManager);
+app.use('/getCookie', cookieManager);
 //endregion
 
 app.listen(port, function () {
@@ -82,8 +86,8 @@ app.listen(port, function () {
 /*
 Express handling post methods
 */
-app.post('/post',function(req,res){
-    console.log(req,res);
+app.post('/post', function (req, res) {
+    console.log(req, res);
     res.send();
 })
 
