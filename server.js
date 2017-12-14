@@ -1,31 +1,39 @@
 var express = require('express');
 var path = require('path');
 var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
+//region requiring routes
 var index = require('./routes/index');
 var tasks = require('./routes/tasks');
 var routeMiddleware = require('./routes/routeMiddleware');
-var appConfig = require('./configs/appConfig');
 var regexRoute = require('./routes/regex');
+var cookieManager=require('./routes/cookieManager');
+//endregion
+
+var appConfig = require('./configs/appConfig');
 var cors = require('cors');
 var port = appConfig.port;
 var app = new express();
-var bodyParser = require('body-parser');
-var urlencodedParser = bodyParser.urlencoded({ extended: false })
-var jsonParser = bodyParser.json()
 
-//View Engine
+// region body-parser middleware functions
+app.use(bodyParser.json());// All request will be passed through this middleware and if it has any json , that will be added to body:{} onbect in req
+app.use(bodyParser.text());// All request will be passed through this middleware and if it has any text , that will be added to body:{} object in req
+app.use(bodyParser.raw());
+app.use(bodyParser.urlencoded({extended:false}));
+/* All request will be passed through this middleware and if it has any form data(application/x-www-urlencoded Content-Type) ,
+ that will be added to body:{} object in req
+*/
+//endregion
+
+//region View Engine
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);
+//endregion
 
 //Set Static Folder
 app.use(express.static(path.join(__dirname, 'media')));
-// app.use(express.static('media'));
-
-//Body Parser Middle-Ware
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
-
+//CORS
 app.use(cors({origin: true, credentials: true}));
 
 //Routing
@@ -34,10 +42,7 @@ app.use(cors({origin: true, credentials: true}));
 //     next();
 // });
 
-/*
-Express multiple middleware routing at APP level
-* */
-
+//region Express multiple middleware routing at APP level
 app.use('/multiplemiddleware/:id', function (req, res, next) {
     console.log('First Middleware function');
     next();
@@ -60,22 +65,24 @@ app.get('/multiplemiddleware/:id', function (req, res, next) {
     console.log('Second Route Method');
     res.send('Success from route 2');
 });
+//endregion
 
-
+//region using routes , creating navigation
 app.use('/', routeMiddleware);
 app.use('/', index);
 app.use('/api', tasks);
 app.use('/regex', regexRoute);
-//Routing End
+app.use('/getCookie',cookieManager);
+//endregion
+
 app.listen(port, function () {
     console.log('Running on port ' + port)
 });
 
-
 /*
 Express handling post methods
 */
-app.post('/post',urlencodedParser,function(req,res){
+app.post('/post',function(req,res){
     console.log(req,res);
     res.send();
 })
