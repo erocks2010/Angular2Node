@@ -4,7 +4,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { NavBarMainComponent } from './navigation/nav-bar-main/nav-bar-main.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { HttpGeneralInterceptor } from './services/interceptors/http-general-interceptor'
+import { HttpGeneralInterceptor } from './services/interceptors/http-general-interceptor';
+import {RouterModule,Route} from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -12,6 +13,13 @@ import { HttpGeneralInterceptor } from './services/interceptors/http-general-int
     NavBarMainComponent
   ],
   imports: [
+    RouterModule.forRoot(
+      [
+        {path:'./login',component:NavBarMainComponent},
+        {path:'**', redirectTo:"www.google.com" ,pathMatch:"full"}
+      ],
+    {enableTracing:true}
+    )
     BrowserModule,
     HttpClientModule
   ],

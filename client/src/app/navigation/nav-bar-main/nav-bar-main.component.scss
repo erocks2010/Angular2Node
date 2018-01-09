@@ -1,19 +1,33 @@
-#navBarMain{
+.toggleMenu{
+    img{
+        height:10vmin;
+        width:10vmin;
+    }
+   }
+.navBarMain{
     position:fixed;
-    float:left;
-    list-style-type: none;
-    background-color:lightseagreen;
-
+    right:10px;
+.navBarChildWrapper{    
+    display:flex;
+    flex-direction: row;
+    flex-wrap:wrap;
+    align-items: center;
+    justify-content: flex-end;
+    
     .navBarMenuItem{
         display:inline;
         color:darkred;
         border:solid 1px black;
-        width:100px;
-        height: 100px;
+        width:12vmin;
+        height: 6vmin;
+        text-align: center;
+        vertical-align: middle;
+        overflow: hidden;
         font:{
             family:serif;
-            size:20px;
+            size:3vmin;
             weight:bold;
+            }
         }
     }
 }

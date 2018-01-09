@@ -9,6 +9,7 @@ var tasks = require('./routes/tasks');
 var routeMiddleware = require('./routes/routeMiddleware');
 var regexRoute = require('./routes/regex');
 var cookieManager = require('./routes/cookieManager');
+var connectMongo=require('connect-mongo');
 //endregion
 
 var appConfig = require('./configs/appConfig');
@@ -17,12 +18,16 @@ var port = appConfig.port;
 var app = new express();
 
 // region body-parser middleware functions
+const mongoSession=connectMongo(session);
 app.use(bodyParser.json());// All request will be passed through this middleware and if it has any json , that will be added to body:{} onbect in req
 app.use(bodyParser.text());// All request will be passed through this middleware and if it has any text , that will be added to body:{} object in req
 app.use(bodyParser.raw());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(session({
-    secret: 'heisenberg', saveUninitialized: false, resave: false, cookie: {maxAge: 100, httpOnly: true}
+    // store:new mongoSession({
+    //     dbPromise:connectionProvider()
+    // }),
+    secret: 'heisenberg', saveUninitialized: true, resave: true, cookie: {maxAge: 10000, httpOnly: true}
 }));
 /* All request will be passed through this middleware and if it has any form data(application/x-www-urlencoded Content-Type) ,
  that will be added to body:{} object in req

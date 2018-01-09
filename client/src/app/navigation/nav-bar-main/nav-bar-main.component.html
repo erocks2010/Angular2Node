@@ -1,7 +1,10 @@
-<nav id='navBarMain'>
-  <ul>
-    <li *ngFor="let menuItem of navBarItems" class='navBarMenuItem'>
+<nav class='navBarMain'>
+  <div class='toggleMenu' on-click="toggleMenuVisiblity()">
+    <img src="././assets/hamburgerMenu.png">
+  </div>
+  <div *ngFor="let array of navBarItemsArray;let i=index" class='navBarChildWrapper'>
+    <div *ngFor="let menuItem of array" class='navBarMenuItem'>
       <a>{{menuItem.name}}</a>
-    </li>
-  </ul>
+    </div>
+  </div>
 </nav>
